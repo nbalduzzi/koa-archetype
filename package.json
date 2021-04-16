@@ -68,10 +68,8 @@
   },
   "husky": {
     "hooks": {
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "lint-staged",
-      "pre-push": "npm run test:unit"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "commitlint": {
@@ -79,38 +77,14 @@
       "@commitlint/config-conventional"
     ]
   },
-  "plugins": [
-    [
-      "@semantic-release/commit-analyzer",
-      {
-        "releaseRules": [
-          {
-            "scope": "no-release",
-            "release": false
-          },
-          {
-            "breaking": true,
-            "release": "major"
-          },
-          {
-            "type": "feat",
-            "release": "minor"
-          },
-          {
-            "type": "refactor",
-            "scope": "core-*",
-            "release": "minor"
-          },
-          {
-            "type": "*",
-            "release": "patch"
-          }
-        ]
-      }
+  "lint-staged": {
+    "*.{js,json,md}": [
+      "prettier --write"
     ],
-    "@semantic-release/release-notes-generator",
-    "@semantic-release/github"
-  ],
+    "*.{js}": [
+      "eslint --cache --fix"
+    ]
+  },
   "release": {
     "branches": [
       "master",
