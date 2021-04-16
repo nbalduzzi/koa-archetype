@@ -9,6 +9,8 @@
     "dev:js": "NODE_ENV=development tsc-watch --onSuccess \"node dist/server.js\" ",
     "start": "NODE_ENV=production node dist/server.js",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "test:unit": "mocha -r ts-node/register test/unit/**/*.spec.ts",
+    "test:integration": "mocha -r ts-node/register test/integration/**/*.spec.ts",
     "coverage": "nyc npm run test",
     "coverage:report": "nyc report --reporter=lcov --reporter=html"
   },
