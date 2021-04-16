@@ -10,12 +10,12 @@ import {
 @Singleton
 export default class CharacterGateway implements ICharacterGateway {
   constructor(
-    @InjectValue('envs.RICK_AND_MORTY_API_URL')
+    @InjectValue(process.env.RICK_AND_MORTY_API_URL!)
     private readonly apiUrl?: string,
   ) {}
 
   async getCharacters(
-    page: string = '0',
+    page = '0',
   ): Promise<PagedApiResponse<ICharacterApiResponse>> {
     try {
       const response = await fetch(`${this.apiUrl}/character?page=${page}`, {

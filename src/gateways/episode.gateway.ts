@@ -6,11 +6,11 @@ import { IEpisodeGateway } from '../interfaces/episode.gateway.interface';
 @Singleton
 export default class EpisodeGateway implements IEpisodeGateway {
   constructor(
-    @InjectValue('envs.RICK_AND_MORTY_API_URL')
+    @InjectValue(process.env.RICK_AND_MORTY_API_URL!)
     private readonly apiUrl?: string,
   ) {}
 
-  async getEpisodes(page: string = '0'): Promise<any> {
+  async getEpisodes(page = '0'): Promise<any> {
     try {
       const response = await fetch(`${this.apiUrl}/episode?page=${page}`, {
         method: 'GET',

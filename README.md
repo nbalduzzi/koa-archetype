@@ -21,6 +21,7 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
+![Test][workflow-test]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -200,3 +201,4 @@ Project Link: [https://github.com/nbalduzzi/koa-archetype](https://github.com/nb
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/nicolasbalduzzi/
 [product-screenshot]: images/screenshot.png
+[workflow-test]: https://github.com/nbalduzzi/koa-archetype/workflows/Test/badge.svg

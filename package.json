@@ -4,11 +4,11 @@
   "description": "Koa.JS Archetype",
   "main": "index.js",
   "scripts": {
-    "precommit": "lint-staged",
     "build": "tsc",
     "dev": "NODE_ENV=development nodemon",
-    "dev:js": "NODE_ENV=development tsc-watch --onSuccess \"node dist/server.js\" ",
-    "start": "NODE_ENV=production node dist/server.js",
+    "dev:js": "NODE_ENV=development tsc-watch --onSuccess \"node -r dotenv/config dist/server.js\" ",
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix",
+    "start": "NODE_ENV=production node -r dotenv/config dist/server.js",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "test:unit": "mocha -r ts-node/register test/unit/**/*.spec.ts",
     "test:integration": "mocha -r ts-node/register test/integration/**/*.spec.ts",
@@ -35,16 +35,19 @@
     "@types/node-fetch": "^2.5.10",
     "@types/sinon": "^10.0.0",
     "@types/uuid": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "chai": "^4.3.4",
-    "commitizen": "^4.2.3",
-    "cz-conventional-changelog": "^3.2.0",
+    "eslint": "^7.24.0",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "husky": "^6.0.0",
     "mocha": "^8.3.2",
     "mongodb-memory-server": "^6.9.6",
     "nock": "^13.0.11",
     "nodemon": "^2.0.7",
     "nyc": "^15.1.0",
-    "semantic-release": "^17.4.2",
+    "prettier": "^2.2.1",
     "sinon": "^10.0.0",
     "ts-node": "^9.1.1",
     "tsc-watch": "^4.2.9",
@@ -84,16 +87,5 @@
     "*.{js}": [
       "eslint --cache --fix"
     ]
-  },
-  "release": {
-    "branches": [
-      "master",
-      "next"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }

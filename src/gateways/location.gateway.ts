@@ -6,11 +6,11 @@ import { ILocationGateway } from '../interfaces/location.gateway.interface';
 @Singleton
 export default class LocationGateway implements ILocationGateway {
   constructor(
-    @InjectValue('envs.RICK_AND_MORTY_API_URL')
+    @InjectValue(process.env.RICK_AND_MORTY_API_URL!)
     private readonly apiUrl?: string,
   ) {}
 
-  async getLocations(page: string = '0'): Promise<any> {
+  async getLocations(page = '0'): Promise<any> {
     try {
       const response = await fetch(`${this.apiUrl}/location?page=${page}`, {
         method: 'GET',

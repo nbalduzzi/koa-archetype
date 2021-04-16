@@ -1,9 +1,7 @@
-import { config } from 'dotenv';
 import Router from 'koa-router';
 import { Container } from 'typescript-ioc';
 import CharacterController from '../controllers/character.controller';
 
-Container.bindName('envs').to(config().parsed!);
 const characterController = Container.get(CharacterController);
 const characterRouter = new Router({ prefix: '/characters' });
 

@@ -1,9 +1,7 @@
-import { config } from 'dotenv';
 import Router from 'koa-router';
 import { Container } from 'typescript-ioc';
 import EpisodeController from '../controllers/episode.controller';
 
-Container.bindName('envs').to(config().parsed!);
 const episodeController = Container.get(EpisodeController);
 const episodeRouter = new Router({ prefix: '/episodes' });
 

@@ -1,17 +1,14 @@
-import { config } from 'dotenv';
 import auth from 'koa-basic-auth';
 import Router from 'koa-router';
 
 const healthRouter = new Router({ prefix: '/health' });
 
-healthRouter.use(async (ctx, next) => {
+healthRouter.use(
   auth({
-    name: ctx.get('HEALTH_CHECK_USER'),
-    pass: ctx.get('HEALTH_CHECK_PASSWORD'),
-  });
-
-  await next();
-});
+    name: process.env.HEALTH_CHECK_USER!,
+    pass: process.env.HEALTH_CHECK_PASSWORD!,
+  }),
+);
 
 healthRouter.get('/', async (ctx) => {
   ctx.status = 200;

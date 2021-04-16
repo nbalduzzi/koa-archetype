@@ -1,9 +1,7 @@
-import { config } from 'dotenv';
 import Router from 'koa-router';
 import { Container } from 'typescript-ioc';
 import LocationController from '../controllers/location.controller';
 
-Container.bindName('envs').to(config().parsed!);
 const locationController = Container.get(LocationController);
 const locationRouter = new Router({ prefix: '/locations' });
 

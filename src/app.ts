@@ -1,4 +1,3 @@
-import { config } from 'dotenv';
 import koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import loggerKoa from 'koa-logger';
@@ -16,9 +15,6 @@ import location from './routes/location.route';
 //init
 const app = new koa();
 
-//load envs
-app.context.envs = config().parsed!;
-
 //middlewares
 app.use(cors());
 app.use(compress());
@@ -31,7 +27,7 @@ app.use(errorHandler());
 
 // security
 app.use(
-  jwt({ secret: app.context.envs.SECRET }).unless({
+  jwt({ secret: process.env.SECRET! }).unless({
     path: [/^\/health/, /^\/swagger-html/, /^\/swagger.json/],
   }),
 );
