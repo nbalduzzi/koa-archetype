@@ -1,0 +1,31 @@
+services:
+    api:
+        build: .
+        container_name: koa_archetype_api
+        depends_on:
+            - mongo
+        ports:
+            - "3000:3000"
+        environment:
+            MONGODB_URI: mongodb://mongo:27017
+        networks:
+            - koa_archetype
+
+    mongo:
+        image: mongo
+        restart: always
+        container_name: koa_archetype_mongo
+        environment:
+            MONGO_INITDB_DATABASE: rickandmorty
+            MONGO_INITDB_ROOT_USERNAME: rickandmortyuser
+            MONGO_INITDB_ROOT_PASSWORD: rickandmortypasswd
+        ports:
+            - "27017:27017"
+        volumes:
+            - ./mongodata:/data/db
+        networks:
+            - koa_archetype
+
+networks:
+    koa_archetype:
+        name: koa_archetype
