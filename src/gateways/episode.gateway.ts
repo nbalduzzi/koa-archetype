@@ -1,14 +1,11 @@
 import fetch from 'node-fetch';
-import { InjectValue, Singleton } from 'typescript-ioc';
+import { Singleton } from 'typescript-ioc';
 import { boomify, internal } from 'boom';
 import { IEpisodeGateway } from '../interfaces/episode.gateway.interface';
 
 @Singleton
 export default class EpisodeGateway implements IEpisodeGateway {
-  constructor(
-    @InjectValue(process.env.RICK_AND_MORTY_API_URL!)
-    private readonly apiUrl?: string,
-  ) {}
+  public readonly apiUrl = process.env.RICK_AND_MORTY_API_URL!;
 
   async getEpisodes(page = '0'): Promise<any> {
     try {
