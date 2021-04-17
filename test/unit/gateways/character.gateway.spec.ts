@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import nock from 'nock';
+import nock, { Scope } from 'nock';
 import CharacterGateway from '../../../src/gateways/character.gateway';
 import {
   CharacterStatus,
@@ -10,39 +10,46 @@ import {
 } from '../../../src/interfaces/character.gateway.interface';
 
 describe('Character Gateway', () => {
-  let gateway: ICharacterGateway;
-  let apiUrl: string = 'http://someUrl.com';
+  const apiUrl = 'http://some.url.com/api';
 
-  before(() => (gateway = new CharacterGateway(apiUrl)));
+  let gateway: ICharacterGateway;
+  let nockScope: Scope;
+
+  before(() => {
+    nockScope = nock(apiUrl);
+    process.env.RICK_AND_MORTY_API_URL = apiUrl;
+
+    gateway = new CharacterGateway();
+  });
+
+  after(() => nock.cleanAll());
 
   describe('on get character', () => {
     describe('on fetch api success', () => {
       it('should return the character', async () => {
-        nock(apiUrl)
-          .get('/character/1')
-          .reply(200, {
-            id: 1,
-            name: 'Rick Sanchez',
-            status: CharacterStatus.ALIVE,
-            species: 'Human',
-            type: '',
-            gender: CharacterGender.MALE,
-            origin: {
-              name: 'Earth',
-              url: 'https://rickandmortyapi.com/api/location/1',
-            },
-            location: {
-              name: 'Earth',
-              url: 'https://rickandmortyapi.com/api/location/20',
-            },
-            image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-            episode: [
-              'https://rickandmortyapi.com/api/episode/1',
-              'https://rickandmortyapi.com/api/episode/2',
-            ],
-            url: 'https://rickandmortyapi.com/api/character/1',
-            created: '2017-11-04T18:48:46.250Z',
-          });
+        nockScope.get('/character/1').reply(200, {
+          id: 1,
+          name: 'Rick Sanchez',
+          status: CharacterStatus.ALIVE,
+          species: 'Human',
+          type: '',
+          gender: CharacterGender.MALE,
+          origin: {
+            name: 'Earth',
+            url: 'https://rickandmortyapi.com/api/location/1',
+          },
+          location: {
+            name: 'Earth',
+            url: 'https://rickandmortyapi.com/api/location/20',
+          },
+          image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
+          episode: [
+            'https://rickandmortyapi.com/api/episode/1',
+            'https://rickandmortyapi.com/api/episode/2',
+          ],
+          url: 'https://rickandmortyapi.com/api/character/1',
+          created: '2017-11-04T18:48:46.250Z',
+        });
 
         const response: ICharacterApiResponse = await gateway.getCharacter('1');
 
@@ -56,7 +63,7 @@ describe('Character Gateway', () => {
     describe('on fetch api fails', () => {
       it('should throw error', async () => {
         try {
-          nock(apiUrl).get('/character/1').reply(500);
+          nockScope.get('/character/1').reply(500);
 
           await gateway.getCharacter('1');
         } catch (e) {
@@ -70,37 +77,35 @@ describe('Character Gateway', () => {
     describe('on fetch api success', () => {
       describe('on fetch first page success', () => {
         it('should return the first page characters list', async () => {
-          nock(apiUrl)
-            .get('/character?page=0')
-            .reply(200, {
-              info: { count: 1, pages: 1, next: null, prev: null },
-              results: [
-                {
-                  id: 1,
-                  name: 'Rick Sanchez',
-                  status: CharacterStatus.ALIVE,
-                  species: 'Human',
-                  type: '',
-                  gender: CharacterGender.MALE,
-                  origin: {
-                    name: 'Earth',
-                    url: 'https://rickandmortyapi.com/api/location/1',
-                  },
-                  location: {
-                    name: 'Earth',
-                    url: 'https://rickandmortyapi.com/api/location/20',
-                  },
-                  image:
-                    'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-                  episode: [
-                    'https://rickandmortyapi.com/api/episode/1',
-                    'https://rickandmortyapi.com/api/episode/2',
-                  ],
-                  url: 'https://rickandmortyapi.com/api/character/1',
-                  created: '2017-11-04T18:48:46.250Z',
+          nockScope.get('/character?page=0').reply(200, {
+            info: { count: 1, pages: 1, next: null, prev: null },
+            results: [
+              {
+                id: 1,
+                name: 'Rick Sanchez',
+                status: CharacterStatus.ALIVE,
+                species: 'Human',
+                type: '',
+                gender: CharacterGender.MALE,
+                origin: {
+                  name: 'Earth',
+                  url: 'https://rickandmortyapi.com/api/location/1',
                 },
-              ],
-            });
+                location: {
+                  name: 'Earth',
+                  url: 'https://rickandmortyapi.com/api/location/20',
+                },
+                image:
+                  'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
+                episode: [
+                  'https://rickandmortyapi.com/api/episode/1',
+                  'https://rickandmortyapi.com/api/episode/2',
+                ],
+                url: 'https://rickandmortyapi.com/api/character/1',
+                created: '2017-11-04T18:48:46.250Z',
+              },
+            ],
+          });
 
           const response: PagedApiResponse<ICharacterApiResponse> = await gateway.getCharacters();
 
@@ -117,42 +122,40 @@ describe('Character Gateway', () => {
 
       describe('on fetch second page success', () => {
         it('should return the second page characters list', async () => {
-          nock(apiUrl)
-            .get('/character?page=2')
-            .reply(200, {
-              info: {
-                count: 1,
-                pages: 1,
-                next: 'https://rickandmortyapi.com/api/character?page=2',
-                prev: 'https://rickandmortyapi.com/api/character?page=1',
-              },
-              results: [
-                {
-                  id: 1,
-                  name: 'Rick Sanchez',
-                  status: CharacterStatus.ALIVE,
-                  species: 'Human',
-                  type: '',
-                  gender: CharacterGender.MALE,
-                  origin: {
-                    name: 'Earth',
-                    url: 'https://rickandmortyapi.com/api/location/1',
-                  },
-                  location: {
-                    name: 'Earth',
-                    url: 'https://rickandmortyapi.com/api/location/20',
-                  },
-                  image:
-                    'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-                  episode: [
-                    'https://rickandmortyapi.com/api/episode/1',
-                    'https://rickandmortyapi.com/api/episode/2',
-                  ],
-                  url: 'https://rickandmortyapi.com/api/character/1',
-                  created: '2017-11-04T18:48:46.250Z',
+          nockScope.get('/character?page=2').reply(200, {
+            info: {
+              count: 1,
+              pages: 1,
+              next: 'https://rickandmortyapi.com/api/character?page=2',
+              prev: 'https://rickandmortyapi.com/api/character?page=1',
+            },
+            results: [
+              {
+                id: 1,
+                name: 'Rick Sanchez',
+                status: CharacterStatus.ALIVE,
+                species: 'Human',
+                type: '',
+                gender: CharacterGender.MALE,
+                origin: {
+                  name: 'Earth',
+                  url: 'https://rickandmortyapi.com/api/location/1',
                 },
-              ],
-            });
+                location: {
+                  name: 'Earth',
+                  url: 'https://rickandmortyapi.com/api/location/20',
+                },
+                image:
+                  'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
+                episode: [
+                  'https://rickandmortyapi.com/api/episode/1',
+                  'https://rickandmortyapi.com/api/episode/2',
+                ],
+                url: 'https://rickandmortyapi.com/api/character/1',
+                created: '2017-11-04T18:48:46.250Z',
+              },
+            ],
+          });
 
           const response: PagedApiResponse<ICharacterApiResponse> = await gateway.getCharacters(
             '2',
@@ -177,7 +180,7 @@ describe('Character Gateway', () => {
     describe('on fetch api fails', () => {
       it('should throw error', async () => {
         try {
-          nock(apiUrl).get('/character?page=0').reply(500);
+          nockScope.get('/character?page=0').reply(500);
           await gateway.getCharacters();
         } catch (e) {
           expect(e).to.not.be.undefined;

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import nock from 'nock';
+import nock, { Scope } from 'nock';
 import LocationGateway from '../../../src/gateways/location.gateway';
 import {
   ILocationGateway,
@@ -8,28 +8,35 @@ import {
 } from '../../../src/interfaces/location.gateway.interface';
 
 describe('Location Gateway', () => {
-  let gateway: ILocationGateway;
-  let apiUrl: string = 'http://someUrl.com';
+  const apiUrl = 'http://some.url.com/api';
 
-  before(() => (gateway = new LocationGateway(apiUrl)));
+  let gateway: ILocationGateway;
+  let nockScope: Scope;
+
+  before(() => {
+    nockScope = nock(apiUrl);
+    process.env.RICK_AND_MORTY_API_URL = apiUrl;
+
+    gateway = new LocationGateway();
+  });
+
+  after(() => nock.cleanAll());
 
   describe('on get location', () => {
     describe('on fetch api success', () => {
       it('should return the location', async () => {
-        nock(apiUrl)
-          .get('/location/3')
-          .reply(200, {
-            id: 3,
-            name: 'Citadel of Ricks',
-            type: 'Space station',
-            dimension: 'unknown',
-            residents: [
-              'https://rickandmortyapi.com/api/character/8',
-              'https://rickandmortyapi.com/api/character/14',
-            ],
-            url: 'https://rickandmortyapi.com/api/location/3',
-            created: '2017-11-10T13:08:13.191Z',
-          });
+        nockScope.get('/location/3').reply(200, {
+          id: 3,
+          name: 'Citadel of Ricks',
+          type: 'Space station',
+          dimension: 'unknown',
+          residents: [
+            'https://rickandmortyapi.com/api/character/8',
+            'https://rickandmortyapi.com/api/character/14',
+          ],
+          url: 'https://rickandmortyapi.com/api/location/3',
+          created: '2017-11-10T13:08:13.191Z',
+        });
 
         const response: ILocationApiResponse = await gateway.getLocation('3');
 
@@ -42,7 +49,7 @@ describe('Location Gateway', () => {
     describe('on fetch api fails', () => {
       it('should throw error', async () => {
         try {
-          nock(apiUrl).get('/location/3').reply(500);
+          nockScope.get('/location/3').reply(500);
 
           await gateway.getLocation('3');
         } catch (e) {
@@ -56,25 +63,23 @@ describe('Location Gateway', () => {
     describe('on fetch api success', () => {
       describe('on fetch first page success', () => {
         it('should return the first page locations list', async () => {
-          nock(apiUrl)
-            .get('/location?page=0')
-            .reply(200, {
-              info: { count: 1, pages: 1, next: null, prev: null },
-              results: [
-                {
-                  id: 3,
-                  name: 'Citadel of Ricks',
-                  type: 'Space station',
-                  dimension: 'unknown',
-                  residents: [
-                    'https://rickandmortyapi.com/api/character/8',
-                    'https://rickandmortyapi.com/api/character/14',
-                  ],
-                  url: 'https://rickandmortyapi.com/api/location/3',
-                  created: '2017-11-10T13:08:13.191Z',
-                },
-              ],
-            });
+          nockScope.get('/location?page=0').reply(200, {
+            info: { count: 1, pages: 1, next: null, prev: null },
+            results: [
+              {
+                id: 3,
+                name: 'Citadel of Ricks',
+                type: 'Space station',
+                dimension: 'unknown',
+                residents: [
+                  'https://rickandmortyapi.com/api/character/8',
+                  'https://rickandmortyapi.com/api/character/14',
+                ],
+                url: 'https://rickandmortyapi.com/api/location/3',
+                created: '2017-11-10T13:08:13.191Z',
+              },
+            ],
+          });
 
           const response: PagedApiResponse<ILocationApiResponse> = await gateway.getLocations();
 
@@ -91,30 +96,28 @@ describe('Location Gateway', () => {
 
       describe('on fetch second page success', () => {
         it('should return the second page locations list', async () => {
-          nock(apiUrl)
-            .get('/location?page=2')
-            .reply(200, {
-              info: {
-                count: 1,
-                pages: 1,
-                next: 'https://rickandmortyapi.com/api/location?page=2',
-                prev: 'https://rickandmortyapi.com/api/location?page=1',
+          nockScope.get('/location?page=2').reply(200, {
+            info: {
+              count: 1,
+              pages: 1,
+              next: 'https://rickandmortyapi.com/api/location?page=2',
+              prev: 'https://rickandmortyapi.com/api/location?page=1',
+            },
+            results: [
+              {
+                id: 3,
+                name: 'Citadel of Ricks',
+                type: 'Space station',
+                dimension: 'unknown',
+                residents: [
+                  'https://rickandmortyapi.com/api/character/8',
+                  'https://rickandmortyapi.com/api/character/14',
+                ],
+                url: 'https://rickandmortyapi.com/api/location/3',
+                created: '2017-11-10T13:08:13.191Z',
               },
-              results: [
-                {
-                  id: 3,
-                  name: 'Citadel of Ricks',
-                  type: 'Space station',
-                  dimension: 'unknown',
-                  residents: [
-                    'https://rickandmortyapi.com/api/character/8',
-                    'https://rickandmortyapi.com/api/character/14',
-                  ],
-                  url: 'https://rickandmortyapi.com/api/location/3',
-                  created: '2017-11-10T13:08:13.191Z',
-                },
-              ],
-            });
+            ],
+          });
 
           const response: PagedApiResponse<ILocationApiResponse> = await gateway.getLocations(
             '2',
@@ -139,7 +142,7 @@ describe('Location Gateway', () => {
     describe('on fetch api fails', () => {
       it('should throw error', async () => {
         try {
-          nock(apiUrl).get('/location?page=0').reply(500);
+          nockScope.get('/location?page=0').reply(500);
           await gateway.getLocations();
         } catch (e) {
           expect(e).to.not.be.undefined;

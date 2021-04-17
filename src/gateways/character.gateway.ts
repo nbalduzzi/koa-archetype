@@ -9,16 +9,17 @@ import {
 
 @Singleton
 export default class CharacterGateway implements ICharacterGateway {
-  public readonly apiUrl = process.env.RICK_AND_MORTY_API_URL!;
-
   async getCharacters(
     page = '0',
   ): Promise<PagedApiResponse<ICharacterApiResponse>> {
-    const response = await fetch(`${this.apiUrl}/character?page=${page}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      timeout: 5000,
-    });
+    const response = await fetch(
+      `${process.env.RICK_AND_MORTY_API_URL!}/character?page=${page}`,
+      {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        timeout: 5000,
+      },
+    );
 
     if (!response.ok) {
       throw boomify(new Error(response.statusText), {
@@ -30,11 +31,14 @@ export default class CharacterGateway implements ICharacterGateway {
   }
 
   async getCharacter(id: string): Promise<ICharacterApiResponse> {
-    const response = await fetch(`${this.apiUrl}/character/${id}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      timeout: 5000,
-    });
+    const response = await fetch(
+      `${process.env.RICK_AND_MORTY_API_URL!}/character/${id}`,
+      {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        timeout: 5000,
+      },
+    );
 
     if (!response.ok) {
       throw boomify(new Error(response.statusText), {

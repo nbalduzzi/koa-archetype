@@ -5,14 +5,15 @@ import { ILocationGateway } from '../interfaces/location.gateway.interface';
 
 @Singleton
 export default class LocationGateway implements ILocationGateway {
-  public readonly apiUrl = process.env.RICK_AND_MORTY_API_URL!;
-
   async getLocations(page = '0'): Promise<any> {
     try {
-      const response = await fetch(`${this.apiUrl}/location?page=${page}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await fetch(
+        `${process.env.RICK_AND_MORTY_API_URL!}/location?page=${page}`,
+        {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
 
       if (!response.ok) {
         throw boomify(new Error(response.statusText), {
@@ -28,10 +29,13 @@ export default class LocationGateway implements ILocationGateway {
 
   async getLocation(id: string): Promise<any> {
     try {
-      const response = await fetch(`${this.apiUrl}/location/${id}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await fetch(
+        `${process.env.RICK_AND_MORTY_API_URL!}/location/${id}`,
+        {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
 
       if (!response.ok) {
         throw boomify(new Error(response.statusText), {

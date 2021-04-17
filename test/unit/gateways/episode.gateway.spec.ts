@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import nock from 'nock';
+import nock, { Scope } from 'nock';
 import EpisodeGateway from '../../../src/gateways/episode.gateway';
 import {
   IEpisodeGateway,
@@ -8,28 +8,35 @@ import {
 } from '../../../src/interfaces/episode.gateway.interface';
 
 describe('Episode Gateway', () => {
-  let gateway: IEpisodeGateway;
-  let apiUrl: string = 'http://someUrl.com';
+  const apiUrl = 'http://some.url.com/api';
 
-  before(() => (gateway = new EpisodeGateway(apiUrl)));
+  let gateway: IEpisodeGateway;
+  let nockScope: Scope;
+
+  before(() => {
+    nockScope = nock(apiUrl);
+    process.env.RICK_AND_MORTY_API_URL = apiUrl;
+
+    gateway = new EpisodeGateway();
+  });
+
+  after(() => nock.cleanAll());
 
   describe('on get episode', () => {
     describe('on fetch api success', () => {
       it('should return the episode', async () => {
-        nock(apiUrl)
-          .get('/episode/28')
-          .reply(200, {
-            id: 28,
-            name: 'The Ricklantis Mixup',
-            air_date: 'September 10, 2017',
-            episode: 'S03E07',
-            characters: [
-              'https://rickandmortyapi.com/api/character/1',
-              'https://rickandmortyapi.com/api/character/2',
-            ],
-            url: 'https://rickandmortyapi.com/api/episode/28',
-            created: '2017-11-10T12:56:36.618Z',
-          });
+        nockScope.get('/episode/28').reply(200, {
+          id: 28,
+          name: 'The Ricklantis Mixup',
+          air_date: 'September 10, 2017',
+          episode: 'S03E07',
+          characters: [
+            'https://rickandmortyapi.com/api/character/1',
+            'https://rickandmortyapi.com/api/character/2',
+          ],
+          url: 'https://rickandmortyapi.com/api/episode/28',
+          created: '2017-11-10T12:56:36.618Z',
+        });
 
         const response: IEpisodeApiResponse = await gateway.getEpisode('28');
 
@@ -42,7 +49,7 @@ describe('Episode Gateway', () => {
     describe('on fetch api fails', () => {
       it('should throw error', async () => {
         try {
-          nock(apiUrl).get('/episode/28').reply(500);
+          nockScope.get('/episode/28').reply(500);
 
           await gateway.getEpisode('28');
         } catch (e) {
@@ -56,25 +63,23 @@ describe('Episode Gateway', () => {
     describe('on fetch api success', () => {
       describe('on fetch first page success', () => {
         it('should return the first page episodes list', async () => {
-          nock(apiUrl)
-            .get('/episode?page=0')
-            .reply(200, {
-              info: { count: 1, pages: 1, next: null, prev: null },
-              results: [
-                {
-                  id: 28,
-                  name: 'The Ricklantis Mixup',
-                  air_date: 'September 10, 2017',
-                  episode: 'S03E07',
-                  characters: [
-                    'https://rickandmortyapi.com/api/character/1',
-                    'https://rickandmortyapi.com/api/character/2',
-                  ],
-                  url: 'https://rickandmortyapi.com/api/episode/28',
-                  created: '2017-11-10T12:56:36.618Z',
-                },
-              ],
-            });
+          nockScope.get('/episode?page=0').reply(200, {
+            info: { count: 1, pages: 1, next: null, prev: null },
+            results: [
+              {
+                id: 28,
+                name: 'The Ricklantis Mixup',
+                air_date: 'September 10, 2017',
+                episode: 'S03E07',
+                characters: [
+                  'https://rickandmortyapi.com/api/character/1',
+                  'https://rickandmortyapi.com/api/character/2',
+                ],
+                url: 'https://rickandmortyapi.com/api/episode/28',
+                created: '2017-11-10T12:56:36.618Z',
+              },
+            ],
+          });
 
           const response: PagedApiResponse<IEpisodeApiResponse> = await gateway.getEpisodes();
 
@@ -93,30 +98,28 @@ describe('Episode Gateway', () => {
 
       describe('on fetch second page success', () => {
         it('should return the second page episodes list', async () => {
-          nock(apiUrl)
-            .get('/episode?page=2')
-            .reply(200, {
-              info: {
-                count: 1,
-                pages: 1,
-                next: 'https://rickandmortyapi.com/api/episode?page=2',
-                prev: 'https://rickandmortyapi.com/api/episode?page=1',
+          nockScope.get('/episode?page=2').reply(200, {
+            info: {
+              count: 1,
+              pages: 1,
+              next: 'https://rickandmortyapi.com/api/episode?page=2',
+              prev: 'https://rickandmortyapi.com/api/episode?page=1',
+            },
+            results: [
+              {
+                id: 28,
+                name: 'The Ricklantis Mixup',
+                air_date: 'September 10, 2017',
+                episode: 'S03E07',
+                characters: [
+                  'https://rickandmortyapi.com/api/character/1',
+                  'https://rickandmortyapi.com/api/character/2',
+                ],
+                url: 'https://rickandmortyapi.com/api/episode/28',
+                created: '2017-11-10T12:56:36.618Z',
               },
-              results: [
-                {
-                  id: 28,
-                  name: 'The Ricklantis Mixup',
-                  air_date: 'September 10, 2017',
-                  episode: 'S03E07',
-                  characters: [
-                    'https://rickandmortyapi.com/api/character/1',
-                    'https://rickandmortyapi.com/api/character/2',
-                  ],
-                  url: 'https://rickandmortyapi.com/api/episode/28',
-                  created: '2017-11-10T12:56:36.618Z',
-                },
-              ],
-            });
+            ],
+          });
 
           const response: PagedApiResponse<IEpisodeApiResponse> = await gateway.getEpisodes(
             '2',
@@ -143,7 +146,7 @@ describe('Episode Gateway', () => {
     describe('on fetch api fails', () => {
       it('should throw error', async () => {
         try {
-          nock(apiUrl).get('/episode?page=0').reply(500);
+          nockScope.get('/episode?page=0').reply(500);
           await gateway.getEpisodes();
         } catch (e) {
           expect(e).to.not.be.undefined;
