@@ -160,6 +160,11 @@ npm run coverage
 npm run coverage:report
 ```
 
+<!-- DOCUMENTATION -->
+## API Documentation
+
+On dev running instance you will have the API Swagger Documentation on [`http://localhost:3000/docs`](http://localhost:3000/docs)
+
 <!-- ROADMAP -->
 ## Roadmap
 
