@@ -4,8 +4,8 @@ import { boomify } from 'boom';
 import {
   ICharacterApiResponse,
   ICharacterGateway,
-  PagedApiResponse,
 } from '../interfaces/character.gateway.interface';
+import { PagedApiResponse } from '../interfaces/pager.interface';
 
 @Singleton
 export default class CharacterGateway implements ICharacterGateway {

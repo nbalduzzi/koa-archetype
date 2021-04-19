@@ -89,4 +89,58 @@ describe('User Service', () => {
       });
     });
   });
+
+  describe('on validate user status', () => {
+    describe('on `OK` status', () => {
+      it('should not throw error', () => {
+        const user: IUser = {
+          id: 'someUserId',
+          username: 'someUsername',
+          password: 'someHashPassword',
+          lastConnection: new Date().toISOString(),
+          status: UserStatus.OK,
+        };
+
+        expect(
+          async () => await service.validateUserStatus(user),
+        ).to.not.throws();
+      });
+    });
+
+    describe('on `BANNED` status', () => {
+      it('should throw error', async () => {
+        const user: IUser = {
+          id: 'someUserId',
+          username: 'someUsername',
+          password: 'someHashPassword',
+          lastConnection: new Date().toISOString(),
+          status: UserStatus.BANNED,
+        };
+
+        try {
+          await service.validateUserStatus(user);
+        } catch (e) {
+          expect(e.message).to.be.equals('user invalid status');
+        }
+      });
+    });
+
+    describe('on `DELETED` status', () => {
+      it('should throw error', async () => {
+        const user: IUser = {
+          id: 'someUserId',
+          username: 'someUsername',
+          password: 'someHashPassword',
+          lastConnection: new Date().toISOString(),
+          status: UserStatus.DELETED,
+        };
+
+        try {
+          await service.validateUserStatus(user);
+        } catch (e) {
+          expect(e.message).to.be.equals('user invalid status');
+        }
+      });
+    });
+  });
 });

@@ -24,7 +24,6 @@ const UserSchema = new Schema<UserDocument>(
       transform: (_, ret) => {
         delete ret._id;
         delete ret.__v;
-        delete ret.password;
       },
     },
   },

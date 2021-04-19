@@ -1,11 +1,17 @@
 import fetch from 'node-fetch';
 import { Singleton } from 'typescript-ioc';
 import { boomify, internal } from 'boom';
-import { ILocationGateway } from '../interfaces/location.gateway.interface';
+import {
+  ILocationApiResponse,
+  ILocationGateway,
+} from '../interfaces/location.gateway.interface';
+import { PagedApiResponse } from '../interfaces/pager.interface';
 
 @Singleton
 export default class LocationGateway implements ILocationGateway {
-  async getLocations(page = '0'): Promise<any> {
+  async getLocations(
+    page = '0',
+  ): Promise<PagedApiResponse<ILocationApiResponse>> {
     try {
       const response = await fetch(
         `${process.env.RICK_AND_MORTY_API_URL!}/location?page=${page}`,
@@ -27,7 +33,7 @@ export default class LocationGateway implements ILocationGateway {
     }
   }
 
-  async getLocation(id: string): Promise<any> {
+  async getLocation(id: string): Promise<ILocationApiResponse> {
     try {
       const response = await fetch(
         `${process.env.RICK_AND_MORTY_API_URL!}/location/${id}`,

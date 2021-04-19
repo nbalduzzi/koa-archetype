@@ -1,9 +1,10 @@
 import { Singleton } from 'typescript-ioc';
+import { ILocationApiResponse } from '../../interfaces/location.gateway.interface';
+import { ILocation } from '../../interfaces/location.interface';
 import {
-  ILocationApiResponse,
   PagedApiResponse,
-} from '../../interfaces/location.gateway.interface';
-import { ILocation, PagedResponse } from '../../interfaces/location.interface';
+  PagedResponse,
+} from '../../interfaces/pager.interface';
 
 @Singleton
 export default class LocationMapper {

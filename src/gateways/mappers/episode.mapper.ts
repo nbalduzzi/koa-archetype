@@ -1,9 +1,10 @@
 import { Singleton } from 'typescript-ioc';
+import { IEpisodeApiResponse } from '../../interfaces/episode.gateway.interface';
+import { IEpisode } from '../../interfaces/episode.interface';
 import {
-  IEpisodeApiResponse,
   PagedApiResponse,
-} from '../../interfaces/episode.gateway.interface';
-import { IEpisode, PagedResponse } from '../../interfaces/episode.interface';
+  PagedResponse,
+} from '../../interfaces/pager.interface';
 
 @Singleton
 export default class EpisodeMapper {

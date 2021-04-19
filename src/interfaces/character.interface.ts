@@ -1,3 +1,5 @@
+import { PagedResponse } from './pager.interface';
+
 export interface ICharacterController {
   getCharacters(page?: string): Promise<PagedResponse<ICharacter>>;
   getCharacter(id: string): Promise<ICharacter>;
@@ -9,7 +11,7 @@ export interface ICharacterService {
 }
 
 export interface ICharacter {
-  id: string;
+  id: number;
   name: string;
   status: string;
   species: string;
@@ -19,14 +21,4 @@ export interface ICharacter {
   location: string;
   image: string;
   created: string;
-}
-
-export interface PagedResponse<T> {
-  info: {
-    count: number;
-    pages: number;
-    nextPage?: string;
-    prevPage?: string;
-  };
-  results: T[];
 }

@@ -1,7 +1,6 @@
 import { IFavorite } from './favorite.interface';
 
 export interface IUserController {
-  registerUser(username: string, password: string): Promise<IUser>;
   getUserByUsername(username: string): Promise<IUser>;
   getUserFavorites(userId: string): Promise<IFavorite[]>;
   saveUserFavorite(userId: string, id: string): Promise<IFavorite>;
@@ -11,6 +10,7 @@ export interface IUserController {
 export interface IUserService {
   saveUser(username: string, password: string): Promise<IUser>;
   getUserByUsername(username: string): Promise<IUser>;
+  validateUserStatus(user: IUser): Promise<void>;
 }
 
 export interface IUserRepository {
@@ -24,6 +24,11 @@ export interface IUser {
   password: string;
   status: UserStatus;
   lastConnection: string;
+}
+
+export interface IUserResister {
+  username: string;
+  password: string;
 }
 
 export enum UserStatus {

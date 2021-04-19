@@ -4,8 +4,8 @@ import LocationGateway from '../../../src/gateways/location.gateway';
 import {
   ILocationGateway,
   ILocationApiResponse,
-  PagedApiResponse,
 } from '../../../src/interfaces/location.gateway.interface';
+import { PagedApiResponse } from '../../../src/interfaces/pager.interface';
 
 describe('Location Gateway', () => {
   const apiUrl = 'http://some.url.com/api';

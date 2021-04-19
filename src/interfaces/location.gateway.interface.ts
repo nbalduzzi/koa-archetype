@@ -1,20 +1,12 @@
+import { PagedApiResponse } from './pager.interface';
+
 export interface ILocationGateway {
   getLocations(page?: string): Promise<PagedApiResponse<ILocationApiResponse>>;
   getLocation(id: string): Promise<ILocationApiResponse>;
 }
 
-export interface PagedApiResponse<T> {
-  info: {
-    count: number;
-    pages: number;
-    next?: string;
-    prev?: string;
-  };
-  results: T[];
-}
-
 export interface ILocationApiResponse {
-  id: string;
+  id: number;
   name: string;
   type: string;
   dimension: string;

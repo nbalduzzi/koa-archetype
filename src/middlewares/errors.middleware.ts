@@ -1,7 +1,7 @@
-import { Context, Next } from 'koa';
+import { Context, Middleware, Next } from 'koa';
 import { isBoom } from 'boom';
 
-export default function errorHandler() {
+export default function errorHandler(): Middleware {
   return async function (ctx: Context, next: Next) {
     try {
       await next();

@@ -6,8 +6,8 @@ import {
   CharacterGender,
   ICharacterGateway,
   ICharacterApiResponse,
-  PagedApiResponse,
 } from '../../../src/interfaces/character.gateway.interface';
+import { PagedApiResponse } from '../../../src/interfaces/pager.interface';
 
 describe('Character Gateway', () => {
   const apiUrl = 'http://some.url.com/api';

@@ -3,8 +3,8 @@ import { SinonStubbedInstance, createStubInstance } from 'sinon';
 import {
   ICharacter,
   ICharacterService,
-  PagedResponse,
 } from '../../../src/interfaces/character.interface';
+import { PagedResponse } from '../../../src/interfaces/pager.interface';
 import CharacterGateway from '../../../src/gateways/character.gateway';
 import CharacterService from '../../../src/services/character.service';
 import CharacterMapper from '../../../src/gateways/mappers/character.mapper';

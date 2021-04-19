@@ -1,7 +1,7 @@
 import { Inject, Singleton } from 'typescript-ioc';
 import { createHash } from 'crypto';
-import { notFound, badRequest } from 'boom';
-import { IUser, IUserService } from '../interfaces/user.interface';
+import { notFound, badRequest, forbidden } from 'boom';
+import { IUser, IUserService, UserStatus } from '../interfaces/user.interface';
 import UserRepository from '../repositories/users/user.repository';
 
 @Singleton
@@ -21,5 +21,11 @@ export default class UserService implements IUserService {
     if (!user) throw notFound('user not found');
 
     return user;
+  }
+
+  async validateUserStatus(user: IUser): Promise<void> {
+    if (user.status !== UserStatus.OK) {
+      throw forbidden('user invalid status');
+    }
   }
 }

@@ -1,8 +1,8 @@
 import { Inject, Singleton } from 'typescript-ioc';
 import LocationGateway from '../gateways/location.gateway';
 import LocationMapper from '../gateways/mappers/location.mapper';
-import { PagedApiResponse } from '../interfaces/location.gateway.interface';
 import { ILocation, ILocationService } from '../interfaces/location.interface';
+import { PagedResponse } from '../interfaces/pager.interface';
 
 @Singleton
 export default class LocationService implements ILocationService {
@@ -11,7 +11,7 @@ export default class LocationService implements ILocationService {
     @Inject private readonly mapper: LocationMapper,
   ) {}
 
-  async getLocations(page?: string): Promise<PagedApiResponse<ILocation>> {
+  async getLocations(page?: string): Promise<PagedResponse<ILocation>> {
     const response = await this.locationGateway.getLocations(page);
     return this.mapper.toPagedDTO(response);
   }

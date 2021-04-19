@@ -1,11 +1,17 @@
 import fetch from 'node-fetch';
 import { Singleton } from 'typescript-ioc';
 import { boomify, internal } from 'boom';
-import { IEpisodeGateway } from '../interfaces/episode.gateway.interface';
+import {
+  IEpisodeApiResponse,
+  IEpisodeGateway,
+} from '../interfaces/episode.gateway.interface';
+import { PagedApiResponse } from '../interfaces/pager.interface';
 
 @Singleton
 export default class EpisodeGateway implements IEpisodeGateway {
-  async getEpisodes(page = '0'): Promise<any> {
+  async getEpisodes(
+    page = '0',
+  ): Promise<PagedApiResponse<IEpisodeApiResponse>> {
     try {
       const response = await fetch(
         `${process.env.RICK_AND_MORTY_API_URL!}/episode?page=${page}`,
@@ -27,7 +33,7 @@ export default class EpisodeGateway implements IEpisodeGateway {
     }
   }
 
-  async getEpisode(id: string): Promise<any> {
+  async getEpisode(id: string): Promise<IEpisodeApiResponse> {
     try {
       const response = await fetch(
         `${process.env.RICK_AND_MORTY_API_URL!}/episode/${id}`,

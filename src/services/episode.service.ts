@@ -2,7 +2,7 @@ import { Inject, Singleton } from 'typescript-ioc';
 import { IEpisode, IEpisodeService } from '../interfaces/episode.interface';
 import EpisodeGateway from '../gateways/episode.gateway';
 import EpisodeMapper from '../gateways/mappers/episode.mapper';
-import { PagedApiResponse } from '../interfaces/episode.gateway.interface';
+import { PagedResponse } from '../interfaces/pager.interface';
 
 @Singleton
 export default class EpisodeService implements IEpisodeService {
@@ -11,7 +11,7 @@ export default class EpisodeService implements IEpisodeService {
     @Inject private readonly mapper: EpisodeMapper,
   ) {}
 
-  async getEpisodes(page?: string): Promise<PagedApiResponse<IEpisode>> {
+  async getEpisodes(page?: string): Promise<PagedResponse<IEpisode>> {
     const response = await this.episodeGateway.getEpisodes(page);
     return this.mapper.toPagedDTO(response);
   }

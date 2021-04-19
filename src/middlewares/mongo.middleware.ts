@@ -1,8 +1,8 @@
-import { Context, Next } from 'koa';
+import { Context, Middleware, Next } from 'koa';
 import { connect } from 'mongoose';
 
-export default function mongoConnect() {
-  return async function (ctx: Context, next: Next) {
+export default function mongoConnect(): Middleware {
+  return async function (_: Context, next: Next) {
     await connect(process.env.MONGODB_URI!, {
       useNewUrlParser: true,
       useUnifiedTopology: true,

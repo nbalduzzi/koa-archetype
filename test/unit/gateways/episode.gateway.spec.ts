@@ -4,8 +4,8 @@ import EpisodeGateway from '../../../src/gateways/episode.gateway';
 import {
   IEpisodeGateway,
   IEpisodeApiResponse,
-  PagedApiResponse,
 } from '../../../src/interfaces/episode.gateway.interface';
+import { PagedApiResponse } from '../../../src/interfaces/pager.interface';
 
 describe('Episode Gateway', () => {
   const apiUrl = 'http://some.url.com/api';

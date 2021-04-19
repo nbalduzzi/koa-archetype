@@ -1,20 +1,12 @@
+import { PagedApiResponse } from './pager.interface';
+
 export interface IEpisodeGateway {
   getEpisodes(page?: string): Promise<PagedApiResponse<IEpisodeApiResponse>>;
   getEpisode(id: string): Promise<IEpisodeApiResponse>;
 }
 
-export interface PagedApiResponse<T> {
-  info: {
-    count: number;
-    pages: number;
-    next?: string;
-    prev?: string;
-  };
-  results: T[];
-}
-
 export interface IEpisodeApiResponse {
-  id: string;
+  id: number;
   name: string;
   air_date: string;
   episode: string;

@@ -1,18 +1,10 @@
+import { PagedApiResponse } from './pager.interface';
+
 export interface ICharacterGateway {
   getCharacters(
     page?: string,
   ): Promise<PagedApiResponse<ICharacterApiResponse>>;
   getCharacter(id: string): Promise<ICharacterApiResponse>;
-}
-
-export interface PagedApiResponse<T> {
-  info: {
-    count: number;
-    pages: number;
-    next?: string;
-    prev?: string;
-  };
-  results: T[];
 }
 
 export interface ICharacterApiResponse {

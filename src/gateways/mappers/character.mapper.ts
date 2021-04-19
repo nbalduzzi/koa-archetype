@@ -1,12 +1,10 @@
 import { Singleton } from 'typescript-ioc';
+import { ICharacterApiResponse } from '../../interfaces/character.gateway.interface';
+import { ICharacter } from '../../interfaces/character.interface';
 import {
-  ICharacterApiResponse,
   PagedApiResponse,
-} from '../../interfaces/character.gateway.interface';
-import {
-  ICharacter,
   PagedResponse,
-} from '../../interfaces/character.interface';
+} from '../../interfaces/pager.interface';
 
 @Singleton
 export default class CharacterMapper {
@@ -28,7 +26,7 @@ export default class CharacterMapper {
 
   toDTO(data: ICharacterApiResponse): ICharacter {
     return {
-      id: data.id.toString(),
+      id: data.id,
       name: data.name,
       status: data.status.toString(),
       species: data.species,

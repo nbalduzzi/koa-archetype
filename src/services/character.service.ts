@@ -2,8 +2,8 @@ import { Inject, Singleton } from 'typescript-ioc';
 import {
   ICharacter,
   ICharacterService,
-  PagedResponse,
 } from '../interfaces/character.interface';
+import { PagedResponse } from '../interfaces/pager.interface';
 import CharacterGateway from '../gateways/character.gateway';
 import CharacterMapper from '../gateways/mappers/character.mapper';
 

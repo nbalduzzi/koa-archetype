@@ -3,8 +3,8 @@ import { SinonStubbedInstance, createStubInstance } from 'sinon';
 import {
   IEpisode,
   IEpisodeService,
-  PagedResponse,
 } from '../../../src/interfaces/episode.interface';
+import { PagedResponse } from '../../../src/interfaces/pager.interface';
 import EpisodeGateway from '../../../src/gateways/episode.gateway';
 import EpisodeService from '../../../src/services/episode.service';
 import EpisodeMapper from '../../../src/gateways/mappers/episode.mapper';

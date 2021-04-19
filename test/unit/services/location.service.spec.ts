@@ -3,8 +3,8 @@ import { SinonStubbedInstance, createStubInstance } from 'sinon';
 import {
   ILocation,
   ILocationService,
-  PagedResponse,
 } from '../../../src/interfaces/location.interface';
+import { PagedResponse } from '../../../src/interfaces/pager.interface';
 import LocationGateway from '../../../src/gateways/location.gateway';
 import LocationService from '../../../src/services/location.service';
 import LocationMapper from '../../../src/gateways/mappers/location.mapper';
